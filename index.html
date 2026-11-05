@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kuiz interaktiv për të mësuar emrat e pemëve dhe perimeve në turqisht dhe shqip.">
+    <title>Kuizi i Pemëve dhe Perimeve | Turqisht - Shqip</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="bg-emerald-600 text-white shadow-md sticky top-0 z-30">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="goToStart()">
+                <div class="w-10 h-10 bg-white text-emerald-600 rounded-xl flex items-center justify-center font-black text-xl shadow">
+                    🍎
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl leading-tight">Meyveler ve Sebzeler</h1>
+                    <p class="text-xs text-emerald-100">Kuizi Interaktiv Turqisht - Shqip</p>
+                </div>
+            </div>
+            <button onclick="toggleDictionaryModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold px-3 py-2 rounded-lg flex items-center space-x-2 transition shadow">
+                <i class="fa-solid fa-book-open"></i>
+                <span class="hidden sm:inline">Fjalori i Plotë</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto w-full px-4 py-6 flex-grow flex items-center justify-center">
+
+        <!-- 1. START SCREEN / SETUP -->
+        <div id="start-screen" class="w-full bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-100 transition-all duration-300">
+            <div class="text-center max-w-xl mx-auto mb-8">
+                <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 font-medium text-xs rounded-full mb-3">
+                    Mëso & Testo Vetën
+                </span>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-2">Zgjidh Modalitetin e Kuizit</h2>
+                <p class="text-slate-500 text-sm">Zgjidh kategorinë dhe drejtimin e gjuhës për të filluar me pyetjet nga fletorja.</p>
+            </div>
+
+            <div class="space-y-6 max-w-md mx-auto">
+                <!-- Category Select -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i> Kategoria:
+                    </label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="selectCategory('all')" id="cat-all" class="cat-btn active bg-emerald-600 text-white font-semibold py-2.5 px-3 rounded-xl border border-emerald-600 text-sm transition text-center shadow-sm">
+                            Të gjitha (53)
+                        </button>
+                        <button type="button" onclick="selectCategory('fruits')" id="cat-fruits" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-3 rounded-xl border border-slate-200 text-sm transition text-center">
+                            Pemët (29)
+                        </button>
+                        <button type="button" onclick="selectCategory('vegetables')" id="cat-vegetables" class="cat-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-3 rounded-xl border border-slate-200 text-sm transition text-center">
+                            Perimet (24)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Direction Select -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        <i class="fa-solid fa-language text-emerald-600 mr-1"></i> Drejtimi i Pyetjeve:
+                    </label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="selectDirection('tr-sq')" id="dir-tr-sq" class="dir-btn active bg-emerald-600 text-white font-semibold py-2.5 px-2 rounded-xl border border-emerald-600 text-xs sm:text-sm transition text-center shadow-sm">
+                            TR ➔ SQ
+                        </button>
+                        <button type="button" onclick="selectDirection('sq-tr')" id="dir-sq-tr" class="dir-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-2 rounded-xl border border-slate-200 text-xs sm:text-sm transition text-center">
+                            SQ ➔ TR
+                        </button>
+                        <button type="button" onclick="selectDirection('mixed')" id="dir-mixed" class="dir-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-2 rounded-xl border border-slate-200 text-xs sm:text-sm transition text-center">
+                            E Përzier
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Number of Questions -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        <i class="fa-solid fa-list-ol text-emerald-600 mr-1"></i> Numri i pyetjeve:
+                    </label>
+                    <select id="question-count" class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl p-3 font-semibold text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="10">10 Pyetje</option>
+                        <option value="20" selected>20 Pyetje</option>
+                        <option value="30">30 Pyetje</option>
+                        <option value="max">Të gjitha fjalët e kategorisë</option>
+                    </select>
+                </div>
+
+                <!-- Start Button -->
+                <button onclick="startQuiz()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-emerald-200 transition duration-200 flex items-center justify-center space-x-2 text-base">
+                    <span>Fillo Kuizin</span>
+                    <i class="fa-solid fa-play text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden w-full bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-100">
+            <!-- Progress & Stats Header -->
+            <div class="flex items-center justify-between mb-4">
+                <span id="question-counter" class="text-xs font-bold text-slate-400 uppercase tracking-wide">Pyetja 1 nga 20</span>
+                <span id="score-live" class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                    Pikët: 0
+                </span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-6">
+                <div id="progress-bar" class="bg-emerald-500 h-full transition-all duration-300 w-0"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-slate-50 rounded-2xl p-6 text-center border border-slate-100 mb-6 shadow-inner relative overflow-hidden">
+                <div id="category-badge" class="inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md mb-2 bg-slate-200 text-slate-600">
+                    PEMË
+                </div>
+                <h3 id="question-text" class="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-tight my-1">
+                    Elma
+                </h3>
+                <p id="question-sub" class="text-xs text-slate-400 mt-1">Cila është domethënia e kësaj fjale?</p>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                <!-- Dynamic Options -->
+            </div>
+
+            <!-- Feedback & Next Button -->
+            <div id="feedback-panel" class="hidden flex flex-col sm:flex-row items-center justify-between bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 sm:space-y-0">
+                <div id="feedback-message" class="text-sm font-semibold flex items-center space-x-2">
+                    <!-- Icon and Message -->
+                </div>
+                <button onclick="nextQuestion()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-lg text-sm transition flex items-center justify-center space-x-2 shadow">
+                    <span>Vazhdo</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. RESULTS SCREEN -->
+        <div id="results-screen" class="hidden w-full bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-100 text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl font-black mb-4 shadow-inner">
+                <i class="fa-solid fa-trophy" id="trophy-icon"></i>
+            </div>
+            
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800 mb-1">Pëfunduat Kuizin!</h2>
+            <p id="result-subtitle" class="text-sm text-slate-500 mb-6">Rezultati yt përfundimtar:</p>
+
+            <!-- Score Stats Circle/Card -->
+            <div class="max-w-xs mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6 shadow-sm">
+                <div class="text-4xl font-extrabold text-emerald-600 mb-1" id="score-percentage">0%</div>
+                <div class="text-sm font-medium text-slate-600" id="score-details">0 nga 0 përgjigje të sakta</div>
+            </div>
+
+            <p id="encouraging-message" class="text-base font-semibold text-slate-700 mb-8 max-w-md mx-auto">
+                Punë e shkëlqyer! Je duke e përvetësuar shumë mirë fjalorin.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="goToStart()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition text-sm shadow">
+                    <i class="fa-solid fa-rotate-right mr-1.5"></i> Provo Sërish
+                </button>
+                <button onclick="toggleDictionaryModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl border border-slate-200 transition text-sm">
+                    <i class="fa-solid fa-book-open mr-1.5"></i> Shiko Fjalorin
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 font-medium">
+        <p class="font-bold text-slate-700">Ky website u krijua nga Enes Rexhaj, XI-A</p>
+        <p class="text-slate-400 text-[11px] mt-1">Kuizi Interaktiv i Gjuhës Turqisht-Shqip &copy; 2026 • Pemët dhe Perimet</p>
+    </footer>
+
+    <!-- DICTIONARY MODAL -->
+    <div id="dictionary-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="bg-emerald-600 text-white p-4 px-6 flex justify-between items-center">
+                <h3 class="font-bold text-lg flex items-center space-x-2">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Tabela e Fjalorit (Meyveler ve Sebzeler)</span>
+                </h3>
+                <button onclick="toggleDictionaryModal()" class="text-white/80 hover:text-white text-xl leading-none font-bold">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Modal Search & Filter -->
+            <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-grow">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="dict-search" onkeyup="filterDictionary()" placeholder="Kërko fjalën (shqip apo turqisht)..." class="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <select id="dict-filter" onchange="filterDictionary()" class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold text-slate-600 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <option value="all">Të gjitha</option>
+                    <option value="fruits">Pemët (Meyveler)</option>
+                    <option value="vegetables">Perimet (Sebzeler)</option>
+                </select>
+            </div>
+
+            <!-- Modal Content (Table) -->
+            <div class="overflow-y-auto p-4 custom-scrollbar flex-grow">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold tracking-wider">
+                            <th class="p-2.5 rounded-l-lg">#</th>
+                            <th class="p-2.5">Turqisht</th>
+                            <th class="p-2.5">Shqip</th>
+                            <th class="p-2.5 rounded-r-lg">Kategoria</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dict-table-body" class="divide-y divide-slate-100">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-3 bg-slate-50 border-t border-slate-200 text-right">
+                <button onclick="toggleDictionaryModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs transition">
+                    Mbyll
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Dictionary Dataset (From Notebook)
+        const vocabulary = [
+            // Meyveler (Pemët) - 29 items
+            { tr: "Elma", sq: "Molla", category: "fruits" },
+            { tr: "Armut", sq: "Dardha", category: "fruits" },
+            { tr: "Ayva", sq: "Ftoi", category: "fruits" },
+            { tr: "Üzüm", sq: "Rrush", category: "fruits" },
+            { tr: "İncir", sq: "Fiku", category: "fruits" },
+            { tr: "Kayısı", sq: "Kajsi", category: "fruits" },
+            { tr: "Şeftali", sq: "Pjeshkë", category: "fruits" },
+            { tr: "Kiraz", sq: "Qershi", category: "fruits" },
+            { tr: "Vişne", sq: "Vishnje", category: "fruits" },
+            { tr: "Muz", sq: "Banane", category: "fruits" },
+            { tr: "Portakal", sq: "Portokall", category: "fruits" },
+            { tr: "Mandalina", sq: "Mandarinë", category: "fruits" },
+            { tr: "Nar", sq: "Shega", category: "fruits" },
+            { tr: "Çilek", sq: "Dredhëza", category: "fruits" },
+            { tr: "Greyfurt", sq: "Grejpfrut", category: "fruits" },
+            { tr: "Karpuz", sq: "Bostan", category: "fruits" },
+            { tr: "Kavun", sq: "Pjepër", category: "fruits" },
+            { tr: "Böğürtlen", sq: "Manaferrë", category: "fruits" },
+            { tr: "Yaban mersini", sq: "Boronicë", category: "fruits" },
+            { tr: "Ahududu", sq: "Mjedrra", category: "fruits" },
+            { tr: "Ceviz", sq: "Arra", category: "fruits" },
+            { tr: "Fındık", sq: "Lajthi", category: "fruits" },
+            { tr: "Fıstık", sq: "Fëstek", category: "fruits" },
+            { tr: "Leblebi", sq: "Leblebi", category: "fruits" },
+            { tr: "Çekirdek", sq: "Fara", category: "fruits" },
+            { tr: "Erik", sq: "Kumbulla", category: "fruits" },
+            { tr: "Kivi", sq: "Kivi", category: "fruits" },
+            { tr: "Dut", sq: "Dudi", category: "fruits" },
+            { tr: "Limon", sq: "Limon", category: "fruits" },
+
+            // Sebzeler (Perimet) - 24 items
+            { tr: "Lahana", sq: "Lakër", category: "vegetables" },
+            { tr: "Domates", sq: "Domate", category: "vegetables" },
+            { tr: "Salatalık", sq: "Kastravec", category: "vegetables" },
+            { tr: "Karnabahar", sq: "Lulelakër", category: "vegetables" },
+            { tr: "Biber", sq: "Spec", category: "vegetables" },
+            { tr: "Marul", sq: "Sallatë e gjelbër", category: "vegetables" },
+            { tr: "Maydanoz", sq: "Majdanoz", category: "vegetables" },
+            { tr: "Ispanak", sq: "Spinaq", category: "vegetables" },
+            { tr: "Pırasa", sq: "Purri", category: "vegetables" },
+            { tr: "Patates", sq: "Patate", category: "vegetables" },
+            { tr: "Soğan", sq: "Qepë", category: "vegetables" },
+            { tr: "Patlıcan", sq: "Patëllxhan", category: "vegetables" },
+            { tr: "Fasulye", sq: "Pasul", category: "vegetables" },
+            { tr: "Havuç", sq: "Karrota", category: "vegetables" },
+            { tr: "Nohut", sq: "Qiqra", category: "vegetables" },
+            { tr: "Pirinç", sq: "Oriz", category: "vegetables" },
+            { tr: "Kereviz", sq: "Selino", category: "vegetables" },
+            { tr: "Bamya", sq: "Bamje", category: "vegetables" },
+            { tr: "Turp", sq: "Rrepë", category: "vegetables" },
+            { tr: "Kabak", sq: "Kungull", category: "vegetables" },
+            { tr: "Bezelye", sq: "Bizele", category: "vegetables" },
+            { tr: "Enginar", sq: "Angjinare", category: "vegetables" },
+            { tr: "Brokoli", sq: "Brokoli", category: "vegetables" },
+            { tr: "Sarımsak", sq: "Hudër", category: "vegetables" }
+        ];
+
+        // State Variables
+        let selectedCategory = 'all';
+        let selectedDirection = 'tr-sq';
+        let quizQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        // Category selection
+        function selectCategory(cat) {
+            selectedCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600', 'shadow-sm');
+                btn.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200');
+            });
+            const activeBtn = document.getElementById(`cat-${cat}`);
+            activeBtn.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200');
+            activeBtn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600', 'shadow-sm');
+        }
+
+        // Direction selection
+        function selectDirection(dir) {
+            selectedDirection = dir;
+            document.querySelectorAll('.dir-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600', 'shadow-sm');
+                btn.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200');
+            });
+            const activeBtn = document.getElementById(`dir-${dir}`);
+            activeBtn.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200');
+            activeBtn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600', 'shadow-sm');
+        }
+
+        // Shuffle Array
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        // Start Quiz
+        function startQuiz() {
+            // Filter words based on category
+            let pool = vocabulary.filter(item => {
+                if (selectedCategory === 'all') return true;
+                return item.category === selectedCategory;
+            });
+
+            if (pool.length === 0) return;
+
+            // Determine question count
+            const countVal = document.getElementById('question-count').value;
+            let count = countVal === 'max' ? pool.length : parseInt(countVal);
+            count = Math.min(count, pool.length);
+
+            // Generate questions
+            let shuffledPool = shuffle([...pool]);
+            quizQuestions = shuffledPool.slice(0, count).map(item => {
+                // Direction
+                let dir = selectedDirection;
+                if (dir === 'mixed') {
+                    dir = Math.random() > 0.5 ? 'tr-sq' : 'sq-tr';
+                }
+
+                const questionText = dir === 'tr-sq' ? item.tr : item.sq;
+                const correctAnswer = dir === 'tr-sq' ? item.sq : item.tr;
+
+                // Options Generation
+                let optionPool = vocabulary
+                    .map(v => dir === 'tr-sq' ? v.sq : v.tr)
+                    .filter(opt => opt !== correctAnswer);
+                
+                optionPool = Array.from(new Set(optionPool)); // Remove duplicates
+                let wrongOptions = shuffle(optionPool).slice(0, 3);
+                let options = shuffle([correctAnswer, ...wrongOptions]);
+
+                return {
+                    question: questionText,
+                    answer: correctAnswer,
+                    options: options,
+                    category: item.category,
+                    direction: dir
+                };
+            });
+
+            // Reset States
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Switch Screens
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        // Render Current Question
+        function renderQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuestionIndex];
+
+            // Progress Update
+            const progress = ((currentQuestionIndex) / quizQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('question-counter').innerText = `Pyetja ${currentQuestionIndex + 1} nga ${quizQuestions.length}`;
+            document.getElementById('score-live').innerText = `Pikët: ${score}`;
+
+            // Category Badge
+            const badge = document.getElementById('category-badge');
+            if (q.category === 'fruits') {
+                badge.innerText = 'PEMË (MEYVE)';
+                badge.className = 'inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md mb-2 bg-amber-100 text-amber-700';
+            } else {
+                badge.innerText = 'PERIME (SEBZE)';
+                badge.className = 'inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md mb-2 bg-emerald-100 text-emerald-700';
+            }
+
+            // Question Text
+            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('question-sub').innerText = q.direction === 'tr-sq' ? 'Cili është përkthimi në shqip?' : 'Cili është përkthimi në turqisht?';
+
+            // Hide Feedback Panel
+            document.getElementById('feedback-panel').classList.add('hidden');
+
+            // Render Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((optionText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full bg-white border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 font-semibold py-3.5 px-4 rounded-xl text-slate-700 text-left transition flex items-center justify-between text-sm md:text-base group shadow-sm';
+                btn.onclick = () => checkAnswer(optionText, btn);
+                btn.innerHTML = `
+                    <span class="flex items-center space-x-3">
+                        <span class="w-7 h-7 rounded-lg bg-slate-100 group-hover:bg-emerald-100 text-slate-500 group-hover:text-emerald-700 flex items-center justify-center text-xs font-bold transition">
+                            ${String.fromCharCode(65 + idx)}
+                        </span>
+                        <span>${optionText}</span>
+                    </span>
+                    <i class="fa-regular fa-circle text-slate-300 group-hover:text-emerald-500 text-sm transition"></i>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        // Check Selected Answer
+        function checkAnswer(selected, buttonElement) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizQuestions[currentQuestionIndex];
+            const isCorrect = selected === q.answer;
+            const options = document.querySelectorAll('.option-btn');
+
+            options.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-emerald-500', 'hover:bg-emerald-50/50');
+            });
+
+            const feedbackPanel = document.getElementById('feedback-panel');
+            const feedbackMsg = document.getElementById('feedback-message');
+
+            if (isCorrect) {
+                score++;
+                buttonElement.classList.remove('border-slate-200', 'bg-white');
+                buttonElement.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+                buttonElement.querySelector('i').className = 'fa-solid fa-circle-check text-emerald-600 text-base';
+
+                feedbackMsg.className = 'text-sm font-semibold flex items-center space-x-2 text-emerald-700';
+                feedbackMsg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> <span>E saktë! Bravo.</span>`;
+            } else {
+                buttonElement.classList.remove('border-slate-200', 'bg-white');
+                buttonElement.classList.add('border-rose-400', 'bg-rose-50', 'text-rose-800');
+                buttonElement.querySelector('i').className = 'fa-solid fa-circle-xmark text-rose-500 text-base';
+
+                // Highlight Correct Answer
+                options.forEach(btn => {
+                    if (btn.innerText.includes(q.answer)) {
+                        btn.classList.remove('border-slate-200', 'bg-white');
+                        btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+                    }
+                });
+
+                feedbackMsg.className = 'text-sm font-semibold flex items-center space-x-2 text-rose-700';
+                feedbackMsg.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 text-lg"></i> <span>Gabim! Përgjigja e saktë është: <strong>${q.answer}</strong></span>`;
+            }
+
+            document.getElementById('score-live').innerText = `Pikët: ${score}`;
+            feedbackPanel.classList.remove('hidden');
+        }
+
+        // Next Question or Show Results
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Show Final Results Screen
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            document.getElementById('score-percentage').innerText = `${percentage}%`;
+            document.getElementById('score-details').innerText = `${score} nga ${quizQuestions.length} përgjigje të sakta`;
+
+            const trophyIcon = document.getElementById('trophy-icon');
+            const msg = document.getElementById('encouraging-message');
+
+            if (percentage >= 80) {
+                trophyIcon.className = 'fa-solid fa-trophy text-amber-500';
+                msg.innerText = 'Shkëlqyeshëm! I ke përvetësuar shumë mirë fjalët e pemëve dhe perimeve.';
+            } else if (percentage >= 50) {
+                trophyIcon.className = 'fa-solid fa-star text-emerald-500';
+                msg.innerText = 'Punë e mirë! Me pak përsëritje mund të arrish 100% të pikëve.';
+            } else {
+                trophyIcon.className = 'fa-solid fa-book-reader text-indigo-500';
+                msg.innerText = 'Keshillë: Shiko fjalorin e plotë dhe provo sërish për rezultate më të mira!';
+            }
+        }
+
+        // Return to Start Screen
+        function goToStart() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        // Modal Functionality
+        function toggleDictionaryModal() {
+            const modal = document.getElementById('dictionary-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                populateDictionaryTable();
+            }
+        }
+
+        function populateDictionaryTable() {
+            const tbody = document.getElementById('dict-table-body');
+            tbody.innerHTML = '';
+
+            vocabulary.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+                const catBadge = item.category === 'fruits' 
+                    ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">Pemë</span>'
+                    : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">Perime</span>';
+
+                tr.innerHTML = `
+                    <td class="p-2.5 font-bold text-slate-400">${index + 1}</td>
+                    <td class="p-2.5 font-bold text-slate-800">${item.tr}</td>
+                    <td class="p-2.5 font-semibold text-slate-600">${item.sq}</td>
+                    <td class="p-2.5">${catBadge}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterDictionary() {
+            const searchValue = document.getElementById('dict-search').value.toLowerCase();
+            const filterValue = document.getElementById('dict-filter').value;
+            const rows = document.getElementById('dict-table-body').getElementsByTagName('tr');
+
+            Array.from(rows).forEach(row => {
+                const trText = row.children[1].innerText.toLowerCase();
+                const sqText = row.children[2].innerText.toLowerCase();
+                const category = row.children[3].innerText.includes('Pemë') ? 'fruits' : 'vegetables';
+
+                const matchesSearch = trText.includes(searchValue) || sqText.includes(searchValue);
+                const matchesFilter = filterValue === 'all' || category === filterValue;
+
+                if (matchesSearch && matchesFilter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
